@@ -23,6 +23,9 @@ handlers:
 - url: /user/([^/]+)
   script: user.py
 
+- url: /
+  script: root.py
+
 skip_files:
 - ^(.*/)?app\.yaml
 - ^(.*/)?app\.yml

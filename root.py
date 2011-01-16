@@ -17,36 +17,14 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from feed import FeedRepository
-from album_repository import AlbumRepository
-from image_picker import RandomImagePicker
+class RootHandler(webapp.RequestHandler):
 
-
-repository = AlbumRepository(FeedRepository())
-picker = RandomImagePicker(repository)
-
-
-class UserHandler(webapp.RequestHandler):
-
-  def get(self, user_name):
-    size = self.request.get("size", "200u")
-    link = bool(int(self.request.get("link", 1)))
-    picture = picker.PickRandomImage(user_name, size)
-    html = """<img src="%s" width="%d" height="%d"/>""" % (
-        picture.GetThumbnailUrl(),
-        picture.GetWidth(),
-        picture.GetHeight())
-
-    if link:
-      html = """<a href="%s" target="_top">%s</a>""" % (
-          picture.GetLink(),
-          html)
-    self.response.out.write("document.write('%s');" % html)
+  def get(self):
+    self.redirect("http://code.google.com/p/rndpic/")
 
 
 application = webapp.WSGIApplication(
-    [(r'/user/([^/]+)', UserHandler)],
-    debug=False)
+    [(r'/', RootHandler)])
 
 
 def main():

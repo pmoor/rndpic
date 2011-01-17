@@ -19,11 +19,11 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 from feed import FeedRepository
 from album_repository import AlbumRepository
-from image_picker import RandomImagePicker
+from picker import RandomPicturePicker
 
 
 repository = AlbumRepository(FeedRepository())
-picker = RandomImagePicker(repository)
+picker = RandomPicturePicker(repository)
 
 
 class UserHandler(webapp.RequestHandler):
@@ -31,7 +31,7 @@ class UserHandler(webapp.RequestHandler):
   def get(self, user_name):
     size = self.request.get("size", "200u")
     link = bool(int(self.request.get("link", 1)))
-    picture = picker.PickRandomImage(user_name, size)
+    picture = picker.Pick(user_name, size)
     html = """<img src="%s" width="%d" height="%d"/>""" % (
         picture.GetThumbnailUrl(),
         picture.GetWidth(),

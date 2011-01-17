@@ -34,11 +34,11 @@ class AlbumRepository(object):
 
   def _ParseUserFeedEntry(self, entry):
     title = entry.getElementsByTagName("title")[0].firstChild.nodeValue
-    num_photos = int(entry.getElementsByTagName("gphoto:numphotos")[0].firstChild.nodeValue)
+    num_pictures = int(entry.getElementsByTagName("gphoto:numphotos")[0].firstChild.nodeValue)
     links = entry.getElementsByTagName("link")
     for link in links:
       if link.getAttribute("rel") == "http://schemas.google.com/g/2005#feed":
-        return Album(title, num_photos, link.getAttribute("href"))
+        return Album(title, num_pictures, link.getAttribute("href"))
 
   def _ParseAlbumFeedEntry(self, entry):
     links = entry.getElementsByTagName("link")

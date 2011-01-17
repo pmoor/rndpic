@@ -16,7 +16,7 @@
 
 import random
 
-class RandomImagePicker(object):
+class RandomPicturePicker(object):
 
   def __init__(self, album_repository):
     self._album_repository = album_repository
@@ -29,8 +29,8 @@ class RandomImagePicker(object):
       if pick < 0:
         return album 
 
-  def PickRandomImage(self, user_name, size):
+  def Pick(self, user_name, size):
     albums = self._album_repository.GetAlbums(user_name)
     album = self._PickWeighted(albums)
-    photos = self._album_repository.GetPictures(album, size)
-    return random.choice(photos)
+    pictures = self._album_repository.GetPictures(album, size)
+    return random.choice(pictures)

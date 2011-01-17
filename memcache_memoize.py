@@ -15,11 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from google.appengine.api import memcache
+import os
 
-APP_VERSION = 6
+APP_VERSION = os.environ["CURRENT_VERSION_ID"]
 
 def _CachedLookup(name, ttl, function, other, args):
-  cache_key = ":".join([str(APP_VERSION), name] + [str(x) for x in args])
+  cache_key = ":".join([APP_VERSION, name] + [str(x) for x in args])
   data = memcache.get(cache_key)
   if data:
     return data

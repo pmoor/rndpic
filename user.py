@@ -32,16 +32,19 @@ class UserHandler(webapp.RequestHandler):
     size = self.request.get("size", "200u")
     link = bool(int(self.request.get("link", 1)))
     picture = picker.Pick(user_name, size)
-    html = """<img src="%s" width="%d" height="%d"/>""" % (
-        picture.GetThumbnailUrl(),
-        picture.GetWidth(),
-        picture.GetHeight())
+    if picture:
+      html = """<img src="%s" width="%d" height="%d"/>""" % (
+          picture.GetThumbnailUrl(),
+          picture.GetWidth(),
+          picture.GetHeight())
 
-    if link:
-      html = """<a href="%s" target="_top">%s</a>""" % (
-          picture.GetLink(),
-          html)
-    self.response.out.write("document.write('%s');" % html)
+      if link:
+        html = """<a href="%s" target="_top">%s</a>""" % (
+            picture.GetLink(),
+            html)
+      self.response.out.write("document.write('%s');" % html)
+
+
 
 
 application = webapp.WSGIApplication(

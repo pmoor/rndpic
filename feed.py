@@ -14,21 +14,33 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from google.appengine.api.urlfetch import fetch
+from google.appengine.api.urlfetch import fetch, DownloadError
 from xml.dom.minidom import parseString
 
 class FeedRepository(object):
 
+  def _Fetch(self, url):
+    try:
+      result = fetch(url, follow_redirects=False, headers={"Accept-Encoding": "compress, gzip"})
+      if result.status_code == 200:
+        return result
+    except DownloadError:
+      pass
+
   def GetUserFeed(self, user_name):
     url = "http://picasaweb.google.com/data/feed/api/user/%s?kind=album&access=public&fields=entry(title,gphoto:numphotos,link(@rel,@href))" % user_name
-    result = fetch(url, follow_redirects=False, headers={"Accept-Encoding": "compress, gzip"})
-    assert result.status_code == 200
-    doc = parseString(result.content).documentElement
-    return list(doc.getElementsByTagName("entry"))
+    result = self._Fetch(url)
+    if result:
+      doc = parseString(result.content).documentElement
+      return doc.getElementsByTagName("entry")
+    else:
+      return []
 
   def GetAlbumFeed(self, feed_base_url, size):
-    feed_url = feed_base_url + "?kind=photo&thumbsize=%s&fields=entry(link[@rel='alternate'],media:group(media:thumbnail))" % size
-    result = fetch(feed_url, follow_redirects=False, headers={"Accept-Encoding": "compress, gzip"})
-    assert result.status_code == 200
-    doc = parseString(result.content).documentElement
-    return list(doc.getElementsByTagName("entry"))
+    url = feed_base_url + "?kind=photo&thumbsize=%s&fields=entry(link[@rel='alternate'],media:group(media:thumbnail))" % size
+    result = self._Fetch(url)
+    if result:
+      doc = parseString(result.content).documentElement
+      return doc.getElementsByTagName("entry")
+    else:
+      return []

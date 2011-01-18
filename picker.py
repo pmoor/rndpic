@@ -23,14 +23,16 @@ class RandomPicturePicker(object):
 
   def _PickWeighted(self, albums):
     total_pictures = sum(album.GetCount() for album in albums)
-    pick = random.randint(0, total_pictures)
-    for album in albums:
-      pick -= album.GetCount() 
-      if pick < 0:
-        return album 
+    if total_pictures > 0:
+      pick = random.randint(0, total_pictures - 1)
+      for album in albums:
+        pick -= album.GetCount() 
+        if pick < 0:
+          return album 
 
   def Pick(self, user_name, size):
     albums = self._album_repository.GetAlbums(user_name)
     album = self._PickWeighted(albums)
-    pictures = self._album_repository.GetPictures(album, size)
-    return random.choice(pictures)
+    if album:
+      pictures = self._album_repository.GetPictures(album, size)
+      return random.choice(pictures)

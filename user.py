@@ -43,6 +43,8 @@ class UserHandler(webapp.RequestHandler):
             picture.GetLink(),
             html)
       self.response.out.write("document.write('%s');" % html)
+    else:
+      self.response.set_status(204)
 
 
 

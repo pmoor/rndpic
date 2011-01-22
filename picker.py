@@ -35,4 +35,5 @@ class RandomPicturePicker(object):
     album = self._PickWeighted(albums)
     if album:
       pictures = self._album_repository.GetPictures(album, size)
-      return random.choice(pictures)
+      if pictures:
+        return random.choice(pictures)

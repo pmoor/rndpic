@@ -33,13 +33,13 @@ class UserHandler(webapp.RequestHandler):
     link = bool(int(self.request.get("link", 1)))
     picture = picker.Pick(user_name, size)
     if picture:
-      html = """<img src="%s" width="%d" height="%d"/>""" % (
+      html = """<img src="%s" width="%d" height="%d" id="rndpic-img"/>""" % (
           picture.GetThumbnailUrl(),
           picture.GetWidth(),
           picture.GetHeight())
 
       if link:
-        html = """<a href="%s" target="_top">%s</a>""" % (
+        html = """<a href="%s" target="_top" id="rndpic-a">%s</a>""" % (
             picture.GetLink(),
             html)
       self.response.out.write("document.write('%s');" % html)

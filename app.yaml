@@ -29,6 +29,9 @@ handlers:
 - url: /
   script: root.py
 
+- url: /examples/
+  static_dir: examples
+
 skip_files:
 - ^(.*/)?app\.yaml
 - ^(.*/)?app\.yml
@@ -40,4 +43,3 @@ skip_files:
 - ^(.*/)?.*/RCS/.*
 - ^(.*/)?\..*
 - ^google_appengine$
-- ^examples$

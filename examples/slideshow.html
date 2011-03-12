@@ -1,0 +1,62 @@
+<!--
+ rndpic - an App Engine app to display random pictures from Picasa Web.
+ Copyright (C) 2011 Patrick Moor <patrick@moor.ws>
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+<head>
+<title>sample slideshow using rndpic.appspot.com</title>
+</head>
+<body>
+<p>This is a sample slideshow using <a href="http://rndpic.appspot.com">rndpic.appspot.com</a>.</p>
+<div>
+<a href="#" id="rndpic_link"><img id="rndpic_image"/></a>
+</div>
+
+<script type="text/javascript">
+
+function loadNewImage() {
+  xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4) {
+      var image = eval("(" + xmlhttp.responseText + ")");
+
+      function switchImage() {
+        var linkTag = document.getElementById("rndpic_link");
+        var imageTag = document.getElementById("rndpic_image");
+        linkTag.href = image.target_url;
+        imageTag.width = image.width;
+        imageTag.height = image.height;
+        imageTag.src = image.thumbnail_url;
+      }
+
+      var preloadedThumbnail = new Image();
+      preloadedThumbnail.src = image.thumbnail_url;
+      preloadedThumbnail.onload = switchImage
+
+      // reload every 5 seconds
+      window.setTimeout("loadNewImage()", 5 * 1000);
+    }
+  };
+  xmlhttp.open("GET", "http://rndpic.appspot.com/json/patrick.moor?size=400u", true);
+  xmlhttp.send();
+}
+
+loadNewImage();
+
+</script>
+
+</body>
+</html>

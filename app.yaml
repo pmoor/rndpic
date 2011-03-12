@@ -21,7 +21,10 @@ api_version: 1
 
 handlers:
 - url: /user/([^/]+)
-  script: user.py
+  script: main.py
+
+- url: /json/([^/]+)
+  script: main.py
 
 - url: /
   script: root.py
@@ -37,3 +40,4 @@ skip_files:
 - ^(.*/)?.*/RCS/.*
 - ^(.*/)?\..*
 - ^google_appengine$
+- ^examples$

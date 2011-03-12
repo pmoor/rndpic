@@ -1,5 +1,5 @@
 # rndpic - an App Engine app to display random pictures from Picasa Web.
-# Copyright (C) 2010 Patrick Moor <patrick@moor.ws>
+# Copyright (C) 2011 Patrick Moor <patrick@moor.ws>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,23 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
-
-from feed import FeedRepository
-from album_repository import AlbumRepository
-from picker import RandomPicturePicker
-
-
-repository = AlbumRepository(FeedRepository())
-picker = RandomPicturePicker(repository)
-
 
 class UserHandler(webapp.RequestHandler):
+
+  def __init__(self, picker):
+    self._picker = picker
 
   def get(self, user_name):
     size = self.request.get("size", "200u")
     link = bool(int(self.request.get("link", 1)))
-    picture = picker.Pick(user_name, size)
+    picture = self._picker.Pick(user_name, size)
     if picture:
       html = """<img src="%s" width="%d" height="%d" id="rndpic-img"/>""" % (
           picture.GetThumbnailUrl(),
@@ -45,18 +38,3 @@ class UserHandler(webapp.RequestHandler):
       self.response.out.write("document.write('%s');" % html)
     else:
       self.response.set_status(204)
-
-
-
-
-application = webapp.WSGIApplication(
-    [(r'/user/([^/]+)', UserHandler)],
-    debug=False)
-
-
-def main():
-  run_wsgi_app(application)
-
-
-if __name__ == "__main__":
-  main()

@@ -26,7 +26,8 @@ class JsonHandler(webapp.RequestHandler):
     self.response.headers["Content-Type"] = "application/json"
     self.response.headers["Access-Control-Allow-Origin"] = "*"
     size = self.request.get("size", "200u")
-    picture = self._picker.Pick(user_name, size)
+    album_id = int(self.request.get("album_id", 0))
+    picture = self._picker.Pick(user_name, size, album_id)
     if picture:
       content = {
         "height": picture.GetHeight(),

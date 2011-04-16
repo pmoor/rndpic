@@ -30,9 +30,17 @@ class RandomPicturePicker(object):
         if pick < 0:
           return album 
 
-  def Pick(self, user_name, size):
+  def _PickById(self, albums, album_id):
+    for album in albums:
+      if album.GetId() == album_id:
+        return album
+
+  def Pick(self, user_name, size, album_id=None):
     albums = self._album_repository.GetAlbums(user_name)
-    album = self._PickWeighted(albums)
+    if album_id:
+      album = self._PickById(albums, album_id)
+    else:
+      album = self._PickWeighted(albums)
     if album:
       pictures = self._album_repository.GetPictures(album, size)
       if pictures:

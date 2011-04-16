@@ -24,7 +24,8 @@ class UserHandler(webapp.RequestHandler):
   def get(self, user_name):
     size = self.request.get("size", "200u")
     link = bool(int(self.request.get("link", 1)))
-    picture = self._picker.Pick(user_name, size)
+    album_id = int(self.request.get("album_id", 0))
+    picture = self._picker.Pick(user_name, size, album_id)
     if picture:
       html = """<img src="%s" width="%d" height="%d" id="rndpic-img"/>""" % (
           picture.GetThumbnailUrl(),

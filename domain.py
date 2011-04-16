@@ -14,6 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
+
+_ALBUM_ID_RE = re.compile(r"/albumid/([0-9]+)$")
+
 class Album(object):
 
   def __init__(self, title, count, feed):
@@ -26,6 +30,12 @@ class Album(object):
 
   def GetCount(self):
     return self._count
+
+  def GetId(self):
+    m = _ALBUM_ID_RE.search(self._feed)
+    if not m:
+      raise Exception("id not found in %s" % self._feed)
+    return int(m.group(1))
 
   def __str__(self):
     return self._feed

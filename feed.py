@@ -16,23 +16,30 @@
 
 from google.appengine.api.urlfetch import fetch, DownloadError
 from xml.dom.minidom import parseString
+import logging
 
 class FeedRepository(object):
 
   def _Fetch(self, url):
     try:
-      result = fetch(url, follow_redirects=False, headers={"Accept-Encoding": "compress, gzip"})
+      result = fetch(url, follow_redirects=False)
       if result.status_code == 200:
         return result
     except DownloadError:
       pass
 
+  def _ParseDocument(self, content):
+    try:
+      return parseString(content).documentElement
+    except:
+      logging.info("failed to parse document: %s", content, exc_info=True)
+      raise
+
   def GetUserFeed(self, user_name):
     url = "http://picasaweb.google.com/data/feed/api/user/%s?kind=album&access=public&fields=entry(title,gphoto:numphotos,link(@rel,@href))" % user_name
     result = self._Fetch(url)
     if result:
-      doc = parseString(result.content).documentElement
-      return doc.getElementsByTagName("entry")
+      return self._ParseDocument(result.content).getElementsByTagName("entry")
     else:
       return []
 
@@ -40,7 +47,6 @@ class FeedRepository(object):
     url = feed_base_url + "?kind=photo&thumbsize=%s&fields=entry(link[@rel='alternate'],media:group(media:thumbnail))" % size
     result = self._Fetch(url)
     if result:
-      doc = parseString(result.content).documentElement
-      return doc.getElementsByTagName("entry")
+      return self._ParseDocument(result.content).getElementsByTagName("entry")
     else:
       return []

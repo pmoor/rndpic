@@ -14,20 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from google.appengine.ext import webapp
+import webapp2
 from django.utils import simplejson 
 
-class JsonHandler(webapp.RequestHandler):
-
-  def __init__(self, picker):
-    self._picker = picker
+class JsonHandler(webapp2.RequestHandler):
 
   def get(self, user_name):
     self.response.headers["Content-Type"] = "application/json"
     self.response.headers["Access-Control-Allow-Origin"] = "*"
     size = self.request.get("size", "200u")
     album_id = int(self.request.get("album_id", 0))
-    picture = self._picker.Pick(user_name, size, album_id)
+    picture = webapp2.get_app().registry["picker"].Pick(
+        user_name, size, album_id)
     if picture:
       content = {
         "height": picture.GetHeight(),

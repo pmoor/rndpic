@@ -16,21 +16,26 @@
 
 application: rndpic
 version: 1
-runtime: python
+runtime: python27
 api_version: 1
+threadsafe: true
 
 handlers:
 - url: /user/([^/]+)
-  script: main.py
+  script: main.app
 
 - url: /json/([^/]+)
-  script: main.py
+  script: main.app
 
 - url: /
-  script: root.py
+  script: root.app
 
 - url: /examples/
   static_dir: examples
+
+libraries:
+- name: django
+  version: latest
 
 skip_files:
 - ^(.*/)?app\.yaml

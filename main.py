@@ -14,8 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
+import webapp2
 
 from feed import FeedRepository
 from album_repository import AlbumRepository
@@ -28,26 +27,10 @@ from json_handler import JsonHandler
 repository = AlbumRepository(FeedRepository())
 picker = RandomPicturePicker(repository)
 
-
-def _ConstructUserHandler():
-  return UserHandler(picker)
-
-
-def _ConstructJsonHandler():
-  return JsonHandler(picker)
-
-
-application = webapp.WSGIApplication(
+app = webapp2.WSGIApplication(
     [
-      (r'/user/([^/]+)', _ConstructUserHandler),
-      (r'/json/([^/]+)', _ConstructJsonHandler),
+      (r'/user/([^/]+)', UserHandler),
+      (r'/json/([^/]+)', JsonHandler),
     ],
     debug=False)
-
-
-def main():
-  run_wsgi_app(application)
-
-
-if __name__ == "__main__":
-  main()
+app.registry["picker"] = picker

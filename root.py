@@ -14,22 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
+import webapp2
 
-class RootHandler(webapp.RequestHandler):
+class RootHandler(webapp2.RequestHandler):
 
   def get(self):
     self.redirect("http://code.google.com/p/rndpic/")
 
 
-application = webapp.WSGIApplication(
+app = webapp2.WSGIApplication(
     [(r'/', RootHandler)])
-
-
-def main():
-  run_wsgi_app(application)
-
-
-if __name__ == "__main__":
-  main()

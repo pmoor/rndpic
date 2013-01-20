@@ -20,8 +20,9 @@ from feed import FeedRepository
 from album_repository import AlbumRepository
 from picker import RandomPicturePicker
 
-from user_handler import UserHandler
+from img_handler import ImgHandler
 from json_handler import JsonHandler
+from user_handler import UserHandler
 
 
 repository = AlbumRepository(FeedRepository())
@@ -29,8 +30,9 @@ picker = RandomPicturePicker(repository)
 
 app = webapp2.WSGIApplication(
     [
-      (r'/user/([^/]+)', UserHandler),
+      (r'/img/([^/]+)', ImgHandler),
       (r'/json/([^/]+)', JsonHandler),
+      (r'/user/([^/]+)', UserHandler),
     ],
     debug=False)
 app.registry["picker"] = picker

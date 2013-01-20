@@ -1,5 +1,5 @@
 # rndpic - an App Engine app to display random pictures from Picasa Web.
-# Copyright (C) 2010 Patrick Moor <patrick@moor.ws>
+# Copyright (C) 2013 Patrick Moor <patrick@moor.ws>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,41 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-application: rndpic-hrd
-version: 1
-runtime: python27
-api_version: 1
-threadsafe: true
+import webapp2
 
-handlers:
-- url: /user/([^/]+)
-  script: main.app
+class ImgHandler(webapp2.RequestHandler):
 
-- url: /json/([^/]+)
-  script: main.app
-
-- url: /img/([^/]+)
-  script: main.app
-
-- url: /
-  script: root.app
-
-- url: /examples/
-  static_dir: examples
-
-libraries:
-- name: django
-  version: latest
-
-skip_files:
-- ^(.*/)?app\.yaml
-- ^(.*/)?app\.yml
-- ^(.*/)?index\.yaml
-- ^(.*/)?index\.yml
-- ^(.*/)?#.*#
-- ^(.*/)?.*~
-- ^(.*/)?.*\.py[co]
-- ^(.*/)?.*/RCS/.*
-- ^(.*/)?\..*
-- ^google_appengine$
-- ^rndpic\.iml$
+  def get(self, user_name):
+    size = self.request.get("size", "200u")
+    album_id = int(self.request.get("album_id", 0))
+    picture = webapp2.get_app().registry["picker"].Pick(
+        user_name, size, album_id)
+    if picture:
+      self.redirect(picture.GetThumbnailUrl().encode())
+    else:
+      self.response.set_status(204)

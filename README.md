@@ -35,7 +35,7 @@ In case you want to have full control over how the image is displayed, rndpic no
       "height": 240
     }
 
-An example of this in action can be seen at http://rndpic.appspot.com/examples/slideshow.html. To get an idea on how to use it, check out the sources at http://code.google.com/p/rndpic/source/browse/trunk/examples/slideshow.html
+An example of this in action can be seen at http://rndpic.appspot.com/examples/slideshow.html. To get an idea on how to use it, check out the sources at https://github.com/pmoor/rndpic/blob/master/examples/slideshow.html
 
 If you're not able to use JavaScript there's a simple integration method using an img-tag:
 

@@ -19,7 +19,7 @@ import webapp2
 class RootHandler(webapp2.RequestHandler):
 
   def get(self):
-    self.redirect("http://code.google.com/p/rndpic/")
+    self.redirect("https://github.com/pmoor/rndpic")
 
 
 app = webapp2.WSGIApplication(
